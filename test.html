@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<script src="vue.js"></script>
+<body>
+<div id="example-2">
+<button v-on:click="width=='300px'?(width='500px'):(width='300px')">变宽</button>
+<button>变高</button>
+<button>变色</button>
+<button>隐藏</button>
+<button>重置</button>
+<p v-bind:style="{width:width,height:height,background:color}" >宽度为{{width}}</p>
+</div>
+</body>
+<script>
+
+var vu=new Vue({
+  el: '#example-2',
+  data: {
+    	width:"300px",
+    	height:"200px",
+    	color:"red",
+  }
+})
+
+</script>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" id="txt">
+	<button id="create">生成json数组</button>
+	<script>
+		function cr(txt){
+			var arr=txt.split(",");
+			var str="";
+			for(var index=0;index<arr.length;index++){
+				str+="<option value='"+arr[index]+"'></option>"
+			}
+			console.log(str);
+		}
+		var create=document.getElementById("create");
+		create.onclick=function(){
+			var txt=document.getElementById("txt").value;
+			cr(txt);
+		}	
+	</script>
+</body>
+</html>

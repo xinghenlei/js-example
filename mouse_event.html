@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>mouse_event
+	</title>
+</head>
+<style>
+	img{
+		position: absolute;
+		width: 80px;
+		height:80px;
+		left:200px;
+		top:100px;
+	}
+</style>
+<body>
+	<button id="click-move">根据鼠标点击位置移动</button>
+	<button id="mousedown-move">根据鼠标运动轨迹移动</button>
+	<p id="desc">点击按钮激活功能</p>
+	<img id="img" src="img/html-1.jpg" alt="">
+</body>
+<script>
+ 	function GetIdEle(id)
+ 	{
+ 		return document.getElementById(id);
+ 	}
+ 	var move=GetIdEle("click-move");
+ 	var mouse_down=GetIdEle("mousedown-move");
+ 	var desc=GetIdEle("desc");
+ 	var img=GetIdEle("img");
+ 	move.onclick=function(event){
+ 		event.stopPropagation();
+ 		event.cancelBubble=true;
+ 		clearevent();
+ 		mouse_down.innerHTML="根据鼠标运动轨迹移动";
+ 		move.innerHTML="根据鼠标点击位置移动(已激活)";
+ 		desc.innerHTML="鼠标点击页面， 人物将移动至鼠标位置！";
+ 		document.onclick=function(event){
+ 			event=event ? event : window.event;
+ 			var c_x=event.clientX,c_y=event.clientY;
+ 			img.src="img/html-2.jpg";
+ 			click_move(c_x,c_y);
+ 			return false;
+ 		}
+ 	}
+	mouse_down.onclick=function(event){
+		event.stopPropagation();
+ 		event.cancelBubble=true;
+ 		clearevent();
+ 		mouse_down.innerHTML="根据鼠标运动轨迹移动(已激活)";
+ 		move.innerHTML="根据鼠标点击位置移动";
+ 		desc.innerHTML="按住鼠标左键，在页面划动，人物将按照鼠标轨迹移动";
+ 		var mousepoint=[{x:img.offsetLeft,y:img.offsetTop}];
+ 		document.onmousedown=function(event){
+ 			var e=event ? event : window.event;
+ 			mousepoint.push({x:e.clientX,y:e.clientY});
+ 			document.onmousemove=function(event){
+ 				var e=event ? event : window.event;
+ 				mousepoint.push({x:e.clientX,y:e.clientY});
+ 				return false;
+ 			}
+ 			return false;
+ 		}
+ 		document.onmouseup = function ()
+		{
+			document.onmousemove = null;
+			var timer=setInterval(function(){
+				if(mousepoint.length==0){
+					clearInterval(timer);
+					return;
+				}
+				else{
+					img.style.left=mousepoint[0].x+"px";
+					img.style.top=mousepoint[0].y+"px";
+					mousepoint.shift();
+				}
+			}, 30)
+		};
+ 	}
+
+ 	function clearevent(){
+ 		document.onclick=null;
+ 		document.onmousedown=null;
+ 		document.onmouseup=null;
+ 		document.onmousemove=null;
+ 	}
+ 	function click_move(x,y){
+ 		clearInterval(img.move);
+ 		img.move=setInterval(function(){
+ 			var ix=(x-img.offsetLeft)/6,iy=(y-img.offsetTop)/6;
+ 			ix = ix > 0 ? Math.ceil(ix) : Math.floor(ix);
+			iy = iy > 0 ? Math.ceil(iy) : Math.floor(iy);
+ 			if(img.offsetLeft==x&&img.offsetTop==y){
+ 				clearInterval(img.move);
+ 				img.src="img/html-1.jpg";
+ 			}
+ 			else{
+ 				img.style.left=img.offsetLeft+ix+"px";
+ 				img.style.top=img.offsetTop+iy+"px";
+ 			}
+ 		}, 50)
+ 	}
+</script>
+</html>

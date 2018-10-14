@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>	
+#interface{width: 426px;height: 640px;background: url('img/ip-open-1.jpg') no-repeat;margin: 0 auto;position: relative;}
+#slid{position: absolute;bottom: 33px;cursor:pointer;}
+</style>
+<body>
+	<div id="interface">
+		<img id="slid" src="img/ip-open-2.jpg" alt="" style="left:33px">
+	</div>
+</body>
+<script>
+var point=[];
+		var max=303;
+		var x=slid.style.left;
+		var x_max=0;
+	window.onload=function(){	
+		var interface=document.getElementById("interface");
+		var slid=document.getElementById("slid");
+		slid.onmousedown=function(event){
+			var e=event?event:window.event;
+			var x1=e.clientX-this.offsetLeft;
+			slid.releaseCapture && slid.releaseCapture();
+			document.onmousemove=function(event){
+				var e=event?event:window.event;
+				var ix=e.clientX-x1;				
+				ix<33&&(ix=33);
+				ix>max&&(ix=303);
+				x_max=ix;
+				slid.style.left=ix+"px";		
+ 				return false;
+			}
+			document.onmouseup=function(event){
+				document.onmousemove=null;
+				document.onmouseup = null;
+				if(x_max>290){
+					interface.style.background="url('img/ip-open-3.jpg')";
+					slid.style.display="none";
+					return;
+				}
+				if(x_max!=parseInt(x)){
+					var i=0;
+				var timeout=setInterval(function() {
+						if((x_max-i)!=33){
+							slid.style.left=x_max-i+"px";						
+						}
+						else{
+						clearInterval(timeout);
+						}
+						i++;
+					}, 10);
+				}
+				
+			}
+		}
+	};
+</script>
+</html>

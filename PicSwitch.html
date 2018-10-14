@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>object_PicSwitch</title>
+</head>
+<style>
+	html,body{
+		margin:0;
+		padding: 0;
+	}
+	#Billboard{
+		width: 490px;
+		height: 170px;
+		position: relative;
+		margin: 0 auto;
+		border:8px solid black;
+		border-radius: 5px;
+		overflow: hidden;
+	}
+	#img{
+		position: absolute;
+		width: 490px;
+		height: 170px;
+		margin:0;
+		padding: 0;
+		top:0;
+	}
+	#img li img,#img li{
+		width: 490px;
+		height: 170px;
+	}
+	#tag{
+		position: absolute;
+		bottom: 5%;
+		margin:0;
+		padding: 0;
+		left:340px;
+	}
+	#tag li{
+		list-style-type: none;
+		background-color: orange;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		text-align: center;
+		float: left;
+		margin-left: 8px;
+	}
+	#tag li.check{
+		background-color: red;
+	}
+</style>
+<body>
+	<div id="Billboard">
+		<ul id="img">
+			<li><img src="img/langbo1.jpg" alt=""></li>
+			<li><img src="img/langbo2.jpg" alt=""></li>
+			<li><img src="img/langbo3.jpg" alt=""></li>
+			<li><img src="img/langbo4.jpg" alt=""></li>
+			<li><img src="img/langbo5.jpg" alt=""></li>
+		</ul>
+		<ul id="tag">
+			<li class="check">1</li>
+			<li class="">2</li>
+			<li class="">3</li>
+			<li class="">4</li>
+			<li class="">5</li>
+		</ul>
+	</div>
+</body>
+<script>
+	var getID=function(id){
+		return document.getElementById(id);
+	}
+	var eletag=function(ele,tag){
+		return ele.getElementsByTagName(tag);
+	}
+	var langbo=function(id){
+		this.init(id);
+	}
+	langbo.prototype={
+		init:function(id){
+			var othis=this;
+			this.box=getID("Billboard");
+			this.tag=getID(id);
+			this.li=eletag(this.tag,"li");
+			this.inum=0;
+			this.ul=getID("img");
+			this.img=eletag(this.ul,"img");
+			this.AutoPlay=setInterval(function(){
+				othis.inum++;
+				othis.inum==5&&(othis.inum=0);
+				othis.toggle();
+			}, 3000);
+			for(var i=0;i<this.li.length;i++){
+				othis.li[i].index=i;
+				othis.li[i].onmouseover=function(){
+					othis.inum=this.index;
+					othis.toggle();
+				}
+			}
+			this.box.onmouseover=function(){
+				clearInterval(othis.AutoPlay);
+			}
+			this.box.onmouseout=function(){
+				othis.AutoPlay=setInterval(function(){
+					othis.inum++;
+					othis.inum==5&&(othis.inum=0);
+					othis.toggle();
+				}, 3000);
+			}
+		},		
+		toggle:function(){
+			var othis=this;
+			var max=othis.inum*170;
+			var num=Math.abs(othis.ul.offsetTop);
+			for(var i=0;i<5;i++){
+					othis.li[i].className="";
+			}
+			othis.li[othis.inum].className="check";
+			clearInterval(othis.timer);
+			if(num==max) return;
+			if(num>max)
+			{
+
+				othis.timer=setInterval(function(){
+					num-=17;
+					othis.ul.style.top="-"+num+"px";
+					if(num==max){
+					clearInterval(othis.timer);						
+					}
+				},20)
+			}
+			else{
+				othis.timer=setInterval(function(){
+					num+=17;
+					othis.ul.style.top="-"+num+"px";
+					if(num==max){
+					clearInterval(othis.timer);
+					}
+				},20)
+			}	
+			//clearInterval(othis.timer);
+		}
+	};
+	window.onload=function(){
+	    new langbo("tag");
+	}
+</script>
+</html>

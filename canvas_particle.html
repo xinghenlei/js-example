@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>canvas_particle</title>
+	<style>
+		body {
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="drawing" width="400" height="100" style="margin:0 auto;"></canvas>
+</body>
+<script>
+	var dynamic_particle = function (id) {
+		this.init(id);
+	}
+	dynamic_particle.prototype = {
+		init: function (id) {
+			var othis = this;
+			this.canvas = document.getElementById(id);
+			if (this.canvas.getContext) {
+				this.context = drawing.getContext("2d");
+			} else {
+				alert("您的浏览器不支持canvas");
+				return;
+			}
+			this.ix = 0;
+			this.ixmax = 300;
+			this.iy = 50;
+			this.iymax = 80;
+			this.iyswitch = true;
+			this.switch = false;
+			this.hsla = 0;
+			this.color = null;
+			this.part_num = 0;
+			this.partdrawing = new Array();
+			this.part = [{
+				x: this.ix,
+				y: this.iy,
+				iswitch: this.iyswitch
+			}];
+			this.canvas.onclick = function () {
+				othis.switch = othis.switch ? false : true;
+				if (othis.switch) {
+					othis.drawing = setInterval(function () {
+						othis.draw_Rectangle();
+						othis.dynamic_particle(othis.ix, othis.color, othis.part_num);
+					}, 20)
+				} else {
+					clearInterval(othis.drawing);
+					// for(var i=0;i<othis.partdrawing.length;i++){
+					// 	clearInterval(othis.partdrawing[i]);
+					// }
+				}
+			}
+		},
+		//动态生成矩形
+		draw_Rectangle: function () {
+			this.context.clearRect(50, 30, this.ix, 20);
+			this.context.clearRect(50 + this.ix, 30, 300 - this.ix, 20);
+			this.ix == this.ixmax ? (this.ix = 0) && (this.part_num == 0) : (this.ix++);
+			this.color = this.dynamic_hsla();
+			this.context.fillStyle = this.color;
+			if (this.hsla == 360) this.hsla = 0;
+			this.context.fillRect(50, 30, this.ix, 20);
+			this.context.fillStyle = "rgba(0,0,0,1)";
+			this.context.fillRect(50 + this.ix, 30, 300 - this.ix, 20);
+		},
+		//动态生成hsla颜色
+		dynamic_hsla: function () {
+			return 'hsla(' + (this.hsla++) + ',100%,40%,1)';
+		},
+		//粒子动态运动
+		dynamic_particle: function (x, color, num) {
+			var othis = this;
+			this.part[num] = {
+				x: this.ix,
+				y: this.iy,
+				iswitch: this.iyswitch
+			};
+			this.partdrawing[num] = setInterval(function () {
+				if (othis.switch) {
+					othis.context.fillStyle = color;
+					if (othis.part[num].iswitch) {
+						othis.context.clearRect(othis.part[num].x + 50, othis.part[num].y--, 3, 3)
+						othis.context.fillRect(othis.part[num].x + 50, othis.part[num].y, 3, 3);
+						if (othis.part[num].y == 5) othis.part[num].iswitch = false;
+					} else {
+						othis.context.clearRect(othis.part[num].x + 50, othis.part[num].y++, 3, 3)
+						othis.context.fillRect(othis.part[num].x + 50, othis.part[num].y, 3, 3);
+						if (othis.part[num].y == 75) {
+							clearInterval(othis.partdrawing[num]);
+							othis.context.clearRect(othis.part[num].x + 50, othis.part[num].y, 3, 3)
+							othis.part[num].iswitch = true;
+						}
+					}
+				}
+			}, Math.floor(Math.random() * 40))
+			this.part_num++;
+		}
+	}
+	window.onload = function () {
+		new dynamic_particle("drawing");
+	}
+</script>
+
+</html>

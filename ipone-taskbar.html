@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>mac-taskbar</title>
+</head>
+<style type="text/css">
+	body{margin: 0;padding: 0;}
+	#footer{
+		position:absolute;width:100%;bottom:0;text-align:center;
+	}
+
+</style>
+<body>
+	<div id="footer">
+		<img src="img/task-1.jpg" alt="">
+		<img src="img/task-2.jpg" alt="">
+		<img src="img/task-3.jpg" alt="">
+		<img src="img/task-4.jpg" alt="">
+		<img src="img/task-5.jpg" alt="">
+		<img src="img/task-6.jpg" alt="">
+		<img src="img/task-7.jpg" alt="">
+	</div>
+	<script>
+	window.onload = function ()
+	{
+		var footer = document.getElementById("footer");
+		var aImg = footer.getElementsByTagName("img");
+		var aWidth = [];
+		var i = 0;
+		//保存原宽度, 并设置当前宽度
+		for (i = 0; i < aImg.length; i++)
+		{
+			aWidth.push(aImg[i].offsetWidth);
+			aImg[i].width = parseInt(aImg[i].offsetWidth / 2);
+		}
+	//鼠标移动事件
+		document.onmousemove = function (event)
+		{
+			var e = event || window.event;
+			for (i = 0; i < aImg.length; i++)
+			{
+				var a = e.clientX - aImg[i].offsetLeft - aImg[i].offsetWidth / 2;
+				var b = e.clientY - aImg[i].offsetTop - footer.offsetTop - aImg[i].offsetHeight / 2;
+				var iScale = 1 - Math.sqrt(a * a + b * b) / 300;
+				if (iScale < 0.5) iScale = 0.5;
+				aImg[i].width = aWidth[i] * iScale
+			}
+		};
+	};
+</script>
+</body>
+
+</html>
