@@ -18,7 +18,7 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Dump CI
         env:
-          GITHUB_CONTEXT: ${{ ci}}
+          GITHUB_CONTEXT: ${{ env.ci}}
         run: echo "$GITHUB_CONTEXT"
       - name: Dump job context
         env:
