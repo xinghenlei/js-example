@@ -18,7 +18,7 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Dump CI
         env:
-          GITHUB_CONTEXT: ${{ toJSON(GITHUB_WORKFLOW) }}
+          GITHUB_CONTEXT: ${{ ci}}
         run: echo "$GITHUB_CONTEXT"
       - name: Dump job context
         env:
